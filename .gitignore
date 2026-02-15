@@ -1,0 +1,64 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Node
+node_modules/
+.next/
+out/
+.vercel/
+.turbo/
+*.tsbuildinfo
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Data
+# Ignore all raw data downloads (large, regenerable)
+data/raw/**/*.csv
+data/raw/**/*.xlsx
+data/raw/**/*.xls
+data/raw/**/*.zip
+data/raw/**/*.pdf
+# HTTP response headers from data downloads — auditing artefact, not source
+data/raw/**/headers/
+# But keep SOURCES.md and .gitkeep
+!data/raw/**/SOURCES.md
+!data/raw/**/.gitkeep
+
+# Keep processed data tracked
+!data/processed/*.csv
+
+# Logs
+*.log
+results/logs/*.log
+
+# OS
+.DS_Store
