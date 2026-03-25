@@ -49,9 +49,14 @@ data/raw/**/*.zip
 data/raw/**/*.pdf
 # HTTP response headers from data downloads — auditing artefact, not source
 data/raw/**/headers/
-# But keep SOURCES.md and .gitkeep
+# But keep SOURCES.md, .gitkeep, and the small extraction-output CSVs that
+# make the processed panel reproducible without re-downloading source PDFs/xlsx
 !data/raw/**/SOURCES.md
 !data/raw/**/.gitkeep
+!data/raw/bihar/rbi_t168_own_tax_revenue.csv
+!data/raw/bihar/rbi_t19_nsdp_pc_current.csv
+!data/raw/bihar/morth_road_accidents_extracted.csv
+!data/raw/bihar/census_predictors.csv
 
 # Keep processed data tracked
 !data/processed/*.csv

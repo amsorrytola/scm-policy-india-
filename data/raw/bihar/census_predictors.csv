@@ -1,0 +1,196 @@
+state,year,urban_share_pct,literacy_rate_pct
+Bihar,2010,11.1,63.1
+Bihar,2011,11.3,63.8
+Bihar,2012,11.5,64.5
+Bihar,2013,11.7,65.2
+Bihar,2014,11.9,65.9
+Bihar,2015,12.1,66.6
+Bihar,2016,12.3,67.3
+Bihar,2017,12.5,68.0
+Bihar,2018,12.7,68.7
+Bihar,2019,12.9,69.4
+Bihar,2020,13.1,70.1
+Bihar,2021,13.3,70.8
+Bihar,2022,13.5,71.5
+Uttar Pradesh,2010,22.1,67.05
+Uttar Pradesh,2011,22.3,67.7
+Uttar Pradesh,2012,22.5,68.35
+Uttar Pradesh,2013,22.7,69.0
+Uttar Pradesh,2014,22.9,69.65
+Uttar Pradesh,2015,23.1,70.3
+Uttar Pradesh,2016,23.3,70.95
+Uttar Pradesh,2017,23.5,71.6
+Uttar Pradesh,2018,23.7,72.25
+Uttar Pradesh,2019,23.9,72.9
+Uttar Pradesh,2020,24.1,73.55
+Uttar Pradesh,2021,24.3,74.2
+Uttar Pradesh,2022,24.5,74.85
+Madhya Pradesh,2010,27.3,68.75
+Madhya Pradesh,2011,27.6,69.3
+Madhya Pradesh,2012,27.9,69.85
+Madhya Pradesh,2013,28.2,70.4
+Madhya Pradesh,2014,28.5,70.95
+Madhya Pradesh,2015,28.8,71.5
+Madhya Pradesh,2016,29.1,72.05
+Madhya Pradesh,2017,29.4,72.6
+Madhya Pradesh,2018,29.7,73.15
+Madhya Pradesh,2019,30.0,73.7
+Madhya Pradesh,2020,30.3,74.25
+Madhya Pradesh,2021,30.6,74.8
+Madhya Pradesh,2022,30.9,75.35
+Rajasthan,2010,24.6,65.4
+Rajasthan,2011,24.9,66.1
+Rajasthan,2012,25.2,66.8
+Rajasthan,2013,25.5,67.5
+Rajasthan,2014,25.8,68.2
+Rajasthan,2015,26.1,68.9
+Rajasthan,2016,26.4,69.6
+Rajasthan,2017,26.7,70.3
+Rajasthan,2018,27.0,71.0
+Rajasthan,2019,27.3,71.7
+Rajasthan,2020,27.6,72.4
+Rajasthan,2021,27.9,73.1
+Rajasthan,2022,28.2,73.8
+Jharkhand,2010,23.9,65.75
+Jharkhand,2011,24.1,66.4
+Jharkhand,2012,24.3,67.05
+Jharkhand,2013,24.5,67.7
+Jharkhand,2014,24.7,68.35
+Jharkhand,2015,24.9,69.0
+Jharkhand,2016,25.1,69.65
+Jharkhand,2017,25.3,70.3
+Jharkhand,2018,25.5,70.95
+Jharkhand,2019,25.7,71.6
+Jharkhand,2020,25.9,72.25
+Jharkhand,2021,26.1,72.9
+Jharkhand,2022,26.3,73.55
+West Bengal,2010,31.65,75.8
+West Bengal,2011,31.9,76.3
+West Bengal,2012,32.15,76.8
+West Bengal,2013,32.4,77.3
+West Bengal,2014,32.65,77.8
+West Bengal,2015,32.9,78.3
+West Bengal,2016,33.15,78.8
+West Bengal,2017,33.4,79.3
+West Bengal,2018,33.65,79.8
+West Bengal,2019,33.9,80.3
+West Bengal,2020,34.15,80.8
+West Bengal,2021,34.4,81.3
+West Bengal,2022,34.65,81.8
+Odisha,2010,16.5,72.35
+Odisha,2011,16.7,72.9
+Odisha,2012,16.9,73.45
+Odisha,2013,17.1,74.0
+Odisha,2014,17.3,74.55
+Odisha,2015,17.5,75.1
+Odisha,2016,17.7,75.65
+Odisha,2017,17.9,76.2
+Odisha,2018,18.1,76.75
+Odisha,2019,18.3,77.3
+Odisha,2020,18.5,77.85
+Odisha,2021,18.7,78.4
+Odisha,2022,18.9,78.95
+Maharashtra,2010,44.8,81.9
+Maharashtra,2011,45.2,82.3
+Maharashtra,2012,45.6,82.7
+Maharashtra,2013,46.0,83.1
+Maharashtra,2014,46.4,83.5
+Maharashtra,2015,46.8,83.9
+Maharashtra,2016,47.2,84.3
+Maharashtra,2017,47.6,84.7
+Maharashtra,2018,48.0,85.1
+Maharashtra,2019,48.4,85.5
+Maharashtra,2020,48.8,85.9
+Maharashtra,2021,49.2,86.3
+Maharashtra,2022,49.6,86.7
+Karnataka,2010,38.25,74.95
+Karnataka,2011,38.7,75.4
+Karnataka,2012,39.15,75.85
+Karnataka,2013,39.6,76.3
+Karnataka,2014,40.05,76.75
+Karnataka,2015,40.5,77.2
+Karnataka,2016,40.95,77.65
+Karnataka,2017,41.4,78.1
+Karnataka,2018,41.85,78.55
+Karnataka,2019,42.3,79.0
+Karnataka,2020,42.75,79.45
+Karnataka,2021,43.2,79.9
+Karnataka,2022,43.65,80.35
+Tamil Nadu,2010,48.1,79.7
+Tamil Nadu,2011,48.4,80.1
+Tamil Nadu,2012,48.7,80.5
+Tamil Nadu,2013,49.0,80.9
+Tamil Nadu,2014,49.3,81.3
+Tamil Nadu,2015,49.6,81.7
+Tamil Nadu,2016,49.9,82.1
+Tamil Nadu,2017,50.2,82.5
+Tamil Nadu,2018,50.5,82.9
+Tamil Nadu,2019,50.8,83.3
+Tamil Nadu,2020,51.1,83.7
+Tamil Nadu,2021,51.4,84.1
+Tamil Nadu,2022,51.7,84.5
+Andhra Pradesh,2010,33.2,67.0
+Andhra Pradesh,2011,33.5,67.4
+Andhra Pradesh,2012,33.8,67.8
+Andhra Pradesh,2013,34.1,68.2
+Andhra Pradesh,2014,34.4,68.6
+Andhra Pradesh,2015,34.7,69.0
+Andhra Pradesh,2016,35.0,69.4
+Andhra Pradesh,2017,35.3,69.8
+Andhra Pradesh,2018,35.6,70.2
+Andhra Pradesh,2019,35.9,70.6
+Andhra Pradesh,2020,36.2,71.0
+Andhra Pradesh,2021,36.5,71.4
+Andhra Pradesh,2022,36.8,71.8
+Telangana,2010,38.45,66.05
+Telangana,2011,38.9,66.5
+Telangana,2012,39.35,66.95
+Telangana,2013,39.8,67.4
+Telangana,2014,40.25,67.85
+Telangana,2015,40.7,68.3
+Telangana,2016,41.15,68.75
+Telangana,2017,41.6,69.2
+Telangana,2018,42.05,69.65
+Telangana,2019,42.5,70.1
+Telangana,2020,42.95,70.55
+Telangana,2021,43.4,71.0
+Telangana,2022,43.85,71.45
+Kerala,2010,47.35,93.75
+Kerala,2011,47.7,93.9
+Kerala,2012,48.05,94.05
+Kerala,2013,48.4,94.2
+Kerala,2014,48.75,94.35
+Kerala,2015,49.1,94.5
+Kerala,2016,49.45,94.65
+Kerala,2017,49.8,94.8
+Kerala,2018,50.15,94.95
+Kerala,2019,50.5,95.1
+Kerala,2020,50.85,95.25
+Kerala,2021,51.2,95.4
+Kerala,2022,51.55,95.55
+Punjab,2010,37.2,75.35
+Punjab,2011,37.5,75.8
+Punjab,2012,37.8,76.25
+Punjab,2013,38.1,76.7
+Punjab,2014,38.4,77.15
+Punjab,2015,38.7,77.6
+Punjab,2016,39.0,78.05
+Punjab,2017,39.3,78.5
+Punjab,2018,39.6,78.95
+Punjab,2019,39.9,79.4
+Punjab,2020,40.2,79.85
+Punjab,2021,40.5,80.3
+Punjab,2022,40.8,80.75
+Haryana,2010,34.4,75.15
+Haryana,2011,34.8,75.6
+Haryana,2012,35.2,76.05
+Haryana,2013,35.6,76.5
+Haryana,2014,36.0,76.95
+Haryana,2015,36.4,77.4
+Haryana,2016,36.8,77.85
+Haryana,2017,37.2,78.3
+Haryana,2018,37.6,78.75
+Haryana,2019,38.0,79.2
+Haryana,2020,38.4,79.65
+Haryana,2021,38.8,80.1
+Haryana,2022,39.2,80.55

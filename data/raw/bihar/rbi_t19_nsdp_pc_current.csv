@@ -1,0 +1,166 @@
+state,year,nsdp_pc_current_inr
+Andhra Pradesh,2012,69000.0
+Andhra Pradesh,2013,74687.0
+Andhra Pradesh,2014,82870.0
+Andhra Pradesh,2015,93903.0
+Andhra Pradesh,2016,108002.0
+Andhra Pradesh,2017,120676.0
+Bihar,2012,21750.0
+Bihar,2013,24487.0
+Bihar,2014,26948.0
+Bihar,2015,28671.0
+Bihar,2016,30404.0
+Bihar,2017,34045.0
+Haryana,2012,106085.0
+Haryana,2013,121269.0
+Haryana,2014,137770.0
+Haryana,2015,147382.0
+Haryana,2016,164963.0
+Haryana,2017,184982.0
+Jharkhand,2012,41254.0
+Jharkhand,2013,47360.0
+Jharkhand,2014,50006.0
+Jharkhand,2015,57301.0
+Jharkhand,2016,52754.0
+Jharkhand,2017,60018.0
+Karnataka,2012,90263.0
+Karnataka,2013,102319.0
+Karnataka,2014,118829.0
+Karnataka,2015,130024.0
+Karnataka,2016,148108.0
+Karnataka,2017,169898.0
+Kerala,2012,97912.0
+Kerala,2013,110314.0
+Kerala,2014,123388.0
+Kerala,2015,135537.0
+Kerala,2016,148133.0
+Kerala,2017,166246.0
+Madhya Pradesh,2012,38497.0
+Madhya Pradesh,2013,44773.0
+Madhya Pradesh,2014,51849.0
+Madhya Pradesh,2015,55678.0
+Madhya Pradesh,2016,62080.0
+Madhya Pradesh,2017,74324.0
+Maharashtra,2012,99597.0
+Maharashtra,2013,112092.0
+Maharashtra,2014,125261.0
+Maharashtra,2015,132836.0
+Maharashtra,2016,146815.0
+Maharashtra,2017,163726.0
+Odisha,2012,48387.0
+Odisha,2013,54762.0
+Odisha,2014,60687.0
+Odisha,2015,63345.0
+Odisha,2016,64835.0
+Odisha,2017,77507.0
+Punjab,2012,85577.0
+Punjab,2013,94318.0
+Punjab,2014,103831.0
+Punjab,2015,108970.0
+Punjab,2016,118858.0
+Punjab,2017,128780.0
+Rajasthan,2012,57192.0
+Rajasthan,2013,63658.0
+Rajasthan,2014,69480.0
+Rajasthan,2015,76429.0
+Rajasthan,2016,83426.0
+Rajasthan,2017,91924.0
+Tamil Nadu,2012,93112.0
+Tamil Nadu,2013,105340.0
+Tamil Nadu,2014,116960.0
+Tamil Nadu,2015,129494.0
+Tamil Nadu,2016,142028.0
+Tamil Nadu,2017,156595.0
+Telangana,2012,91121.0
+Telangana,2013,101007.0
+Telangana,2014,112162.0
+Telangana,2015,124104.0
+Telangana,2016,140840.0
+Telangana,2017,159395.0
+Uttar Pradesh,2012,32648.0
+Uttar Pradesh,2013,36571.0
+Uttar Pradesh,2014,41137.0
+Uttar Pradesh,2015,43458.0
+Uttar Pradesh,2016,48725.0
+Uttar Pradesh,2017,54564.0
+West Bengal,2012,51543.0
+West Bengal,2013,58195.0
+West Bengal,2014,65932.0
+West Bengal,2015,68876.0
+West Bengal,2016,75992.0
+West Bengal,2017,82291.0
+Andhra Pradesh,2018,138299.0
+Andhra Pradesh,2019,154031.0
+Andhra Pradesh,2020,160341.0
+Andhra Pradesh,2021,168063.0
+Andhra Pradesh,2022,193703.0
+Bihar,2018,36850.0
+Bihar,2019,40715.0
+Bihar,2020,44175.0
+Bihar,2021,42128.0
+Bihar,2022,47296.0
+Haryana,2018,208437.0
+Haryana,2019,223022.0
+Haryana,2020,232530.0
+Haryana,2021,225137.0
+Haryana,2022,265163.0
+Jharkhand,2018,67484.0
+Jharkhand,2019,75421.0
+Jharkhand,2020,75016.0
+Jharkhand,2021,69963.0
+Jharkhand,2022,88500.0
+Karnataka,2018,185840.0
+Karnataka,2019,205245.0
+Karnataka,2020,222141.0
+Karnataka,2021,221683.0
+Karnataka,2022,268963.0
+Kerala,2018,183252.0
+Kerala,2019,205437.0
+Kerala,2020,208879.0
+Kerala,2021,194432.0
+Kerala,2022,230280.0
+Madhya Pradesh,2018,81966.0
+Madhya Pradesh,2019,92337.0
+Madhya Pradesh,2020,101909.0
+Madhya Pradesh,2021,101958.0
+Madhya Pradesh,2022,117402.0
+Maharashtra,2018,172663.0
+Maharashtra,2019,182865.0
+Maharashtra,2020,189843.0
+Maharashtra,2021,182454.0
+Maharashtra,2022,219620.0
+Odisha,2018,87055.0
+Odisha,2019,98005.0
+Odisha,2020,104633.0
+Odisha,2021,103211.0
+Odisha,2022,133768.0
+Punjab,2018,139835.0
+Punjab,2019,149974.0
+Punjab,2020,154385.0
+Punjab,2021,150620.0
+Punjab,2022,170276.0
+Rajasthan,2018,98698.0
+Rajasthan,2019,106604.0
+Rajasthan,2020,115534.0
+Rajasthan,2021,114925.0
+Rajasthan,2022,134143.0
+Tamil Nadu,2018,175276.0
+Tamil Nadu,2019,194373.0
+Tamil Nadu,2020,206165.0
+Tamil Nadu,2021,209628.0
+Tamil Nadu,2022,242339.0
+Telangana,2018,179358.0
+Telangana,2019,209848.0
+Telangana,2020,231326.0
+Telangana,2021,225734.0
+Telangana,2022,269000.0
+Uttar Pradesh,2018,59595.0
+Uttar Pradesh,2019,64113.0
+Uttar Pradesh,2020,67639.0
+Uttar Pradesh,2021,63464.0
+Uttar Pradesh,2022,76063.0
+West Bengal,2018,91401.0
+West Bengal,2019,103920.0
+West Bengal,2020,110316.0
+West Bengal,2021,105108.0
+West Bengal,2022,122883.0
