@@ -40,26 +40,21 @@ out/
 .DS_Store
 Thumbs.db
 
-# Data
-# Ignore all raw data downloads (large, regenerable)
-data/raw/**/*.csv
-data/raw/**/*.xlsx
-data/raw/**/*.xls
-data/raw/**/*.zip
-data/raw/**/*.pdf
-# HTTP response headers from data downloads — auditing artefact, not source
-data/raw/**/headers/
-# But keep SOURCES.md, .gitkeep, and the small extraction-output CSVs that
-# make the processed panel reproducible without re-downloading source PDFs/xlsx
-!data/raw/**/SOURCES.md
-!data/raw/**/.gitkeep
-!data/raw/bihar/rbi_t168_own_tax_revenue.csv
-!data/raw/bihar/rbi_t19_nsdp_pc_current.csv
-!data/raw/bihar/morth_road_accidents_extracted.csv
-!data/raw/bihar/census_predictors.csv
+# ── Data ──────────────────────────────────────────────────────
+# Bihar raw data — ALL tracked (PDFs, xlsx, csv, extracted outputs)
+# These are evidence of the actual data acquisition work
+!data/raw/bihar/**
 
-# Keep processed data tracked
+# HTTP header audit files — genuinely useless, skip
+data/raw/bihar/headers/
+
+# Processed panel — always tracked
 !data/processed/*.csv
+
+# Descoped case studies — gitignored (no data collected)
+data/raw/demonetization/**
+data/raw/gst/**
+data/raw/covid/**
 
 # Logs
 *.log
