@@ -1,0 +1,103 @@
+{
+  "case_meta": {
+    "treated_unit": "Bihar",
+    "donor_pool": [
+      "Andhra Pradesh",
+      "Haryana",
+      "Jharkhand",
+      "Karnataka",
+      "Kerala",
+      "Madhya Pradesh",
+      "Maharashtra",
+      "Odisha",
+      "Punjab",
+      "Rajasthan",
+      "Tamil Nadu",
+      "Uttar Pradesh",
+      "West Bengal"
+    ],
+    "predictors": [
+      "nsdp_pc_current_inr",
+      "urban_share_pct",
+      "literacy_rate_pct"
+    ],
+    "outcome": "own_tax_revenue_cr",
+    "treatment_date": "2016-01-01T00:00:00"
+  },
+  "dates": [
+    "2012-01-01T00:00:00",
+    "2013-01-01T00:00:00",
+    "2014-01-01T00:00:00",
+    "2015-01-01T00:00:00",
+    "2016-01-01T00:00:00",
+    "2017-01-01T00:00:00",
+    "2018-01-01T00:00:00",
+    "2019-01-01T00:00:00",
+    "2020-01-01T00:00:00",
+    "2021-01-01T00:00:00",
+    "2022-01-01T00:00:00"
+  ],
+  "treated_outcome": [
+    12612.0,
+    16253.0,
+    19961.0,
+    20750.0,
+    25449.0,
+    23742.0,
+    29708.0,
+    30858.0,
+    30144.0,
+    30342.0,
+    34855.0
+  ],
+  "synthetic_outcome": [
+    14350.758000000002,
+    16303.588,
+    18646.724,
+    20689.163999999997,
+    22758.574,
+    25071.054,
+    29896.954,
+    32258.368,
+    33951.91,
+    33568.754,
+    41714.636
+  ],
+  "gap": [
+    -1738.7580000000016,
+    -50.58799999999974,
+    1314.2760000000017,
+    60.83600000000297,
+    2690.4259999999995,
+    -1329.054,
+    -188.95400000000154,
+    -1400.3679999999986,
+    -3807.9100000000035,
+    -3226.754000000001,
+    -6859.635999999999
+  ],
+  "weights": {
+    "Andhra Pradesh": 0.0,
+    "Haryana": 0.0,
+    "Jharkhand": 0.838,
+    "Karnataka": 0.0,
+    "Kerala": 0.0,
+    "Madhya Pradesh": 0.0,
+    "Maharashtra": 0.0,
+    "Odisha": 0.0,
+    "Punjab": 0.0,
+    "Rajasthan": 0.0,
+    "Tamil Nadu": 0.0,
+    "Uttar Pradesh": 0.162,
+    "West Bengal": 0.0
+  },
+  "diagnostics": {
+    "pre_rmspe": 1090.5115,
+    "post_rmspe": 3442.7613,
+    "rmspe_ratio": 3.157,
+    "avg_post_effect": -2017.4643,
+    "n_pre": 4,
+    "n_post": 7,
+    "n_donors": 13
+  }
+}
