@@ -81,10 +81,11 @@ interface AppState {
   bstsResult: BSTSResult | null;
   scmTaxResult: SCMResult | null;
   bstsTaxResult: BSTSResult | null;
+  scmGrowthResult: SCMResult | null;
   caseMetadata: CaseMetadata | null;
 
   // UI
-  activeOutcome: "primary" | "tax";
+  activeOutcome: "primary" | "tax" | "growth";
   activeMethod: "scm" | "bsts" | "both";
   showPlacebos: boolean;
   selectedDonors: string[];
@@ -97,8 +98,9 @@ interface AppState {
   setBSTSResult: (r: BSTSResult | null) => void;
   setSCMTaxResult: (r: SCMResult) => void;
   setBSTSTaxResult: (r: BSTSResult | null) => void;
+  setSCMGrowthResult: (r: SCMResult) => void;
   setCaseMetadata: (m: CaseMetadata) => void;
-  setActiveOutcome: (o: "primary" | "tax") => void;
+  setActiveOutcome: (o: "primary" | "tax" | "growth") => void;
   setActiveMethod: (m: "scm" | "bsts" | "both") => void;
   setShowPlacebos: (v: boolean) => void;
   setSelectedDonors: (d: string[]) => void;
@@ -113,6 +115,7 @@ export const useAppStore = create<AppState>((set) => ({
   bstsResult: null,
   scmTaxResult: null,
   bstsTaxResult: null,
+  scmGrowthResult: null,
   caseMetadata: null,
   activeOutcome: "primary",
   activeMethod: "scm",
@@ -130,6 +133,7 @@ export const useAppStore = create<AppState>((set) => ({
   setBSTSResult: (r) => set({ bstsResult: r }),
   setSCMTaxResult: (r) => set({ scmTaxResult: r }),
   setBSTSTaxResult: (r) => set({ bstsTaxResult: r }),
+  setSCMGrowthResult: (r) => set({ scmGrowthResult: r }),
   setCaseMetadata: (m) =>
     set({ caseMetadata: m, selectedDonors: m.default_donors }),
   setActiveOutcome: (o) => set({ activeOutcome: o }),

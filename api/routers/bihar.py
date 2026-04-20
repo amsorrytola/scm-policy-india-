@@ -48,6 +48,14 @@ def get_bsts_tax():
         raise HTTPException(status_code=404, detail=str(e))
 
 
+@router.get("/case/bihar/scm/growth")
+def get_scm_growth():
+    try:
+        return scm_service.get_precomputed("scm_growth")
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+
 @router.get("/case/bihar/data")
 def get_panel_data():
     import json

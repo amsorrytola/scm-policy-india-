@@ -45,10 +45,13 @@ BIHAR_CONFIG = {
     ],
     "primary_outcome"  : "road_accident_deaths",
     "secondary_outcome": "own_tax_revenue_cr",
-    "available_outcomes": ["road_accident_deaths", "own_tax_revenue_cr"],
+    "available_outcomes": [
+        "road_accident_deaths", "own_tax_revenue_cr", "nsdp_growth_yoy",
+    ],
     "outcome_labels"   : {
         "road_accident_deaths": "Road accident deaths (MoRTH)",
         "own_tax_revenue_cr"  : "Own tax revenue — ₹ Crore (RBI T168)",
+        "nsdp_growth_yoy"     : "NSDP per-capita YoY growth (%)",
     },
     "pre_period_start": "2012-01-01",
     "pre_period_end"  : "2015-01-01",
@@ -72,10 +75,11 @@ def get_precomputed(result_type: str = "scm") -> dict:
     result_type: "scm" | "bsts" | "scm_tax" | "bsts_tax"
     """
     fname_map = {
-        "scm"     : "bihar_scm.json",
-        "bsts"    : "bihar_bsts.json",
-        "scm_tax" : "bihar_scm_tax.json",
-        "bsts_tax": "bihar_bsts_tax.json",
+        "scm"        : "bihar_scm.json",
+        "bsts"       : "bihar_bsts.json",
+        "scm_tax"    : "bihar_scm_tax.json",
+        "bsts_tax"   : "bihar_bsts_tax.json",
+        "scm_growth" : "bihar_scm_growth.json",
     }
     if result_type not in fname_map:
         raise ValueError(f"Unknown result_type: {result_type}. "

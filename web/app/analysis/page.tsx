@@ -41,6 +41,7 @@ import {
   getBSTSResult,
   getSCMTaxResult,
   getBSTSTaxResult,
+  getSCMGrowthResult,
   refitSCM,
   askGemini,
 } from "@/lib/api";
@@ -69,6 +70,17 @@ function fmtAxisSigned(v: number): string {
   const sign = v >= 0 ? "+" : "−";
   if (abs >= 1000) return `${sign}${(abs / 1000).toFixed(1)}k`;
   return `${sign}${abs}`;
+}
+
+// Growth outcome formatters — values are percentage points
+function fmtAxisPct(v: number): string {
+  if (v === 0) return "0%";
+  return `${v.toFixed(1)}%`;
+}
+
+function fmtAxisSignedPct(v: number): string {
+  if (v === 0) return "0";
+  return `${v > 0 ? "+" : ""}${v.toFixed(1)}pp`;
 }
 
 function fmtNum(n: number | null | undefined, sign = false): string {
@@ -161,6 +173,7 @@ export default function AnalysisPage() {
   const {
     scmResult,
     scmTaxResult,
+    scmGrowthResult,
     bstsResult,
     bstsTaxResult,
     caseMetadata,
@@ -173,6 +186,7 @@ export default function AnalysisPage() {
     chatHistory,
     setSCMResult,
     setSCMTaxResult,
+    setSCMGrowthResult,
     setBSTSResult,
     setBSTSTaxResult,
     setCaseMetadata,
@@ -201,14 +215,16 @@ export default function AnalysisPage() {
       getBSTSResult(),
       getSCMTaxResult().catch(() => null),
       getBSTSTaxResult().catch(() => null),
+      getSCMGrowthResult().catch(() => null),
     ])
-      .then(([meta, scm, bsts, scmTax, bstsTax]) => {
+      .then(([meta, scm, bsts, scmTax, bstsTax, scmGrowth]) => {
         if (!mounted) return;
         setCaseMetadata(meta);
         setSCMResult(scm);
         setBSTSResult(bsts);
         if (scmTax) setSCMTaxResult(scmTax);
         if (bstsTax) setBSTSTaxResult(bstsTax);
+        if (scmGrowth) setSCMGrowthResult(scmGrowth);
         setLoading(false);
       })
       .catch((err) => {
@@ -280,9 +296,18 @@ export default function AnalysisPage() {
 
   // Active SCM/BSTS by outcome tab
   const currentSCM: SCMResult | null =
-    activeOutcome === "tax" ? scmTaxResult : scmResult;
+    activeOutcome === "tax"
+      ? scmTaxResult
+      : activeOutcome === "growth"
+      ? scmGrowthResult
+      : scmResult;
+  // Growth has no BSTS counterpart — fall back to null so charts hide BSTS layers
   const currentBSTS: BSTSResult | null =
-    activeOutcome === "tax" ? bstsTaxResult : bstsResult;
+    activeOutcome === "tax"
+      ? bstsTaxResult
+      : activeOutcome === "growth"
+      ? null
+      : bstsResult;
 
   // BSTS lookup by year (handles SCM 2012-2022 vs BSTS 2010-2022 mismatch)
   const bstsByYear = useMemo(
@@ -407,6 +432,8 @@ export default function AnalysisPage() {
       const outcomeKey =
         activeOutcome === "tax"
           ? caseMetadata.secondary_outcome
+          : activeOutcome === "growth"
+          ? "nsdp_growth_yoy"
           : caseMetadata.primary_outcome;
       const newResult = await refitSCM(
         selectedDonors,
@@ -414,6 +441,7 @@ export default function AnalysisPage() {
         outcomeKey
       );
       if (activeOutcome === "tax") setSCMTaxResult(newResult);
+      else if (activeOutcome === "growth") setSCMGrowthResult(newResult);
       else setSCMResult(newResult);
       toast.success(
         `Refit complete. RMSPE ratio: ${newResult.diagnostics.rmspe_ratio.toFixed(2)}×`
@@ -569,9 +597,25 @@ export default function AnalysisPage() {
                 >
                   Own tax revenue
                 </button>
+                <button
+                  onClick={() => setActiveOutcome("growth")}
+                  className={`w-full rounded-md border px-3 py-2 text-left text-xs ${
+                    activeOutcome === "growth"
+                      ? "border-navy bg-navy text-white"
+                      : "border-gray-300 bg-white"
+                  }`}
+                >
+                  Economic growth (NSDP %)
+                </button>
                 {activeOutcome === "tax" && (
                   <p className="mt-2 text-xs text-gray-500">
                     Attenuated proxy — see methodology.
+                  </p>
+                )}
+                {activeOutcome === "growth" && (
+                  <p className="mt-2 text-xs text-gray-500">
+                    Per-capita NSDP YoY growth (%). 3 pre-treatment obs;
+                    rank 6/14, p≈0.43 — interpret cautiously.
                   </p>
                 )}
               </CardContent>
@@ -660,7 +704,9 @@ export default function AnalysisPage() {
                     <YAxis
                       stroke="#6b7280"
                       fontSize={11}
-                      tickFormatter={fmtAxis}
+                      tickFormatter={
+                        activeOutcome === "growth" ? fmtAxisPct : fmtAxis
+                      }
                       domain={computeDomain(chartData, [
                         "treated",
                         "synthetic",
@@ -756,7 +802,11 @@ export default function AnalysisPage() {
                     <YAxis
                       stroke="#6b7280"
                       fontSize={11}
-                      tickFormatter={fmtAxisSigned}
+                      tickFormatter={
+                        activeOutcome === "growth"
+                          ? fmtAxisSignedPct
+                          : fmtAxisSigned
+                      }
                     />
                     <Tooltip
                       contentStyle={{
@@ -774,14 +824,28 @@ export default function AnalysisPage() {
                       strokeDasharray="3 3"
                     />
 
-                    <Line
-                      type="monotone"
-                      dataKey="gap"
-                      stroke={NAVY}
-                      strokeWidth={2.5}
-                      dot={{ r: 3 }}
-                      name="Gap (actual − synthetic)"
-                    />
+                    {activeOutcome === "growth" ? (
+                      <Bar
+                        dataKey="gap"
+                        name="Gap (actual − synthetic, pp)"
+                      >
+                        {chartData.map((d, i) => (
+                          <Cell
+                            key={i}
+                            fill={(d.gap ?? 0) >= 0 ? "#16a34a" : "#dc2626"}
+                          />
+                        ))}
+                      </Bar>
+                    ) : (
+                      <Line
+                        type="monotone"
+                        dataKey="gap"
+                        stroke={NAVY}
+                        strokeWidth={2.5}
+                        dot={{ r: 3 }}
+                        name="Gap (actual − synthetic)"
+                      />
+                    )}
                   </ComposedChart>
                 </ResponsiveContainer>
               </CardContent>
@@ -793,12 +857,13 @@ export default function AnalysisPage() {
                 <Tabs
                   value={activeOutcome}
                   onValueChange={(v) =>
-                    setActiveOutcome(v as "primary" | "tax")
+                    setActiveOutcome(v as "primary" | "tax" | "growth")
                   }
                 >
                   <TabsList>
                     <TabsTrigger value="primary">Road Accidents</TabsTrigger>
                     <TabsTrigger value="tax">Own Tax Revenue</TabsTrigger>
+                    <TabsTrigger value="growth">Economic Growth</TabsTrigger>
                   </TabsList>
                   <TabsContent value="primary">
                     <p className="mt-3 text-xs text-gray-600">
@@ -816,6 +881,15 @@ export default function AnalysisPage() {
                       loss.
                     </p>
                   </TabsContent>
+                  <TabsContent value="growth">
+                    <p className="mt-3 text-xs text-gray-600">
+                      Per-capita NSDP YoY growth (RBI T19, %). Captures both
+                      sides of prohibition: lost excise revenue / hospitality
+                      vs. household reallocation. Bihar grew ~3 pp/yr slower
+                      than synthetic, but rank 6/14 (p≈0.43) — not statistically
+                      significant; treat as suggestive only.
+                    </p>
+                  </TabsContent>
                 </Tabs>
               </CardContent>
             </Card>
@@ -831,13 +905,17 @@ export default function AnalysisPage() {
                   </CardHeader>
                   <CardContent>
                     <div className="font-serif text-3xl font-bold text-navy">
-                      {fmtNum(
-                        currentSCM.diagnostics.avg_post_effect,
-                        true
-                      )}{" "}
+                      {activeOutcome === "growth"
+                        ? `${currentSCM.diagnostics.avg_post_effect > 0 ? "+" : ""}${currentSCM.diagnostics.avg_post_effect.toFixed(2)}`
+                        : fmtNum(
+                            currentSCM.diagnostics.avg_post_effect,
+                            true
+                          )}{" "}
                       <span className="text-base font-normal text-gray-500">
                         {activeOutcome === "tax"
                           ? "₹ Cr/yr"
+                          : activeOutcome === "growth"
+                          ? "pp/yr"
                           : "deaths/yr"}
                       </span>
                     </div>
@@ -866,6 +944,14 @@ export default function AnalysisPage() {
                             Permutation p
                           </span>
                           <span className="font-mono">≈ 0.071</span>
+                        </div>
+                      )}
+                      {activeOutcome === "growth" && (
+                        <div className="flex justify-between">
+                          <span className="text-gray-500">
+                            Permutation p
+                          </span>
+                          <span className="font-mono">≈ 0.429</span>
                         </div>
                       )}
                     </div>
@@ -941,7 +1027,11 @@ export default function AnalysisPage() {
                   <YAxis
                     stroke="#6b7280"
                     fontSize={11}
-                    tickFormatter={fmtAxisSigned}
+                    tickFormatter={
+                      activeOutcome === "growth"
+                        ? fmtAxisSignedPct
+                        : fmtAxisSigned
+                    }
                   />
                   <Tooltip
                     contentStyle={{

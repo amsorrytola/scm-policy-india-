@@ -20,6 +20,9 @@ export const getSCMTaxResult = () =>
 export const getBSTSTaxResult = () =>
   api.get("/api/case/bihar/bsts/tax").then((r) => r.data);
 
+export const getSCMGrowthResult = () =>
+  api.get("/api/case/bihar/scm/growth").then((r) => r.data);
+
 export default api;
 
 export const getPanelData = () =>
