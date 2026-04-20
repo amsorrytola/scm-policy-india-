@@ -25,22 +25,60 @@ class BSTSAnalysis:
     """
 
     def __init__(self, panel_df, treated_unit, donor_pool, outcome,
-                 treatment_date, time_col="date", unit_col="unit"):
+                 treatment_date, time_col="date", unit_col="unit",
+                 max_donors=None):
         self.panel          = panel_df.copy()
         self.panel[time_col] = pd.to_datetime(self.panel[time_col])
         self.treated_unit   = treated_unit
-        self.donor_pool     = donor_pool
         self.outcome        = outcome
         self.treatment_date = pd.to_datetime(treatment_date)
         self.time_col       = time_col
         self.unit_col       = unit_col
         self.ci             = None
         self._fitted        = False
+        self.max_donors     = max_donors
+
+        # If max_donors set, restrict to the top-k donors by pre-treatment
+        # correlation with the treated unit's outcome series. With short
+        # pre-periods, fewer covariates = better-identified BSTS model
+        # (Brodersen et al. 2015 §3.2).
+        if max_donors is not None and len(donor_pool) > max_donors:
+            pre_panel = panel_df[
+                pd.to_datetime(panel_df[time_col]) < pd.to_datetime(treatment_date)
+            ]
+            wide_pre = pre_panel.pivot(
+                index=time_col, columns=unit_col, values=outcome
+            )
+            if treated_unit in wide_pre.columns:
+                corr = wide_pre.corr()[treated_unit].drop(
+                    treated_unit, errors="ignore"
+                )
+                # Restrict candidates to user-supplied donor_pool
+                corr = corr[corr.index.isin(donor_pool)]
+                top_donors = corr.abs().nlargest(max_donors).index.tolist()
+                self.donor_pool = top_donors
+                print(
+                    f"  [BSTS] Restricted to {max_donors} donors by "
+                    f"pre-period correlation:"
+                )
+                for d in self.donor_pool:
+                    print(f"    {d}: r={corr[d]:.3f}")
+            else:
+                self.donor_pool = donor_pool[:max_donors]
+        else:
+            self.donor_pool = list(donor_pool)
 
     def _build_wide(self):
         """
         Build wide DataFrame: first column = treated outcome,
-        remaining columns = donor outcomes (covariates for regression component).
+        remaining columns = donor outcomes (covariates for the
+        BSTS regression component).
+
+        With max_donors restriction in __init__, donor_pool is already
+        the parsimonious set. Drop any row where the treated unit OR
+        any selected donor has NaN — the regression cannot use those
+        observations anyway, and inferred bands at the edge are
+        meaningless when donor coverage is incomplete.
         """
         wide = self.panel.pivot(
             index=self.time_col, columns=self.unit_col, values=self.outcome
@@ -49,10 +87,10 @@ class BSTSAnalysis:
         cols = [self.treated_unit] + [
             c for c in self.donor_pool if c in wide.columns
         ]
-        wide = wide[cols].dropna(how="all")
+        wide = wide[cols]
 
-        # Forward-fill any isolated NaNs in donors (minor gaps only)
-        wide = wide.ffill().bfill()
+        # Drop rows where treated unit OR any selected donor has NaN
+        wide = wide.dropna()
         return wide
 
     def fit(self):
