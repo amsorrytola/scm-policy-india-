@@ -1,0 +1,3 @@
+Method,Outcome,Pre-RMSPE,RMSPE ratio,Avg post effect,P-value / inference,Top donors
+SCM (Abadie et al. 2010),Road accident deaths,42 deaths,22.87x,+360 deaths/yr,"~0.071 (permutation, rank 2/14)","Jharkhand (68%), Odisha (16%), UP (16%)"
+BSTS (Brodersen et al. 2015),Road accident deaths,N/A (Bayesian),N/A,+1355 deaths/yr,p≈0.0 (unreliable — n=6 pre-periods),13-donor regression (spike-slab)
