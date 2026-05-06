@@ -77,6 +77,29 @@ function fmtNum(n: number | null | undefined, sign = false): string {
   return (sign && n > 0 ? "+" : n < 0 ? "−" : "") + s;
 }
 
+// Compute Y-axis domain from non-null values across one or more keys.
+// Critical for BSTS: the 2010 row may have null bands after outlier
+// clipping, and Recharts' default auto-scale would still respect any
+// other null/NaN. Explicit domain stops the chart from collapsing.
+function computeDomain<T extends Record<string, unknown>>(
+  data: readonly T[],
+  keys: ReadonlyArray<keyof T>,
+  pad = 0.15,
+): [number | "auto", number | "auto"] {
+  const vals: number[] = [];
+  for (const row of data) {
+    for (const k of keys) {
+      const v = row[k];
+      if (typeof v === "number" && Number.isFinite(v)) vals.push(v);
+    }
+  }
+  if (vals.length === 0) return ["auto", "auto"];
+  const lo = Math.min(...vals);
+  const hi = Math.max(...vals);
+  const rng = hi - lo;
+  return [Math.floor(lo - rng * pad), Math.ceil(hi + rng * pad)];
+}
+
 // ── Tooltip formatter (shared) ────────────────────────────────────────────────
 // Recharts may pass a single value or a [low, high] tuple (for bands)
 type ChartValue = number | string | null | undefined | readonly (string | number)[];
@@ -638,6 +661,11 @@ export default function AnalysisPage() {
                       stroke="#6b7280"
                       fontSize={11}
                       tickFormatter={fmtAxis}
+                      domain={computeDomain(chartData, [
+                        "treated",
+                        "synthetic",
+                        "bsts_mean",
+                      ])}
                     />
                     <Tooltip
                       contentStyle={{
@@ -670,6 +698,7 @@ export default function AnalysisPage() {
                           stroke="none"
                           isAnimationActive={false}
                           name="BSTS 95% credible band"
+                          connectNulls={false}
                         />
                       )}
                     {(activeMethod === "both" ||
@@ -684,6 +713,7 @@ export default function AnalysisPage() {
                           strokeWidth={2}
                           name="BSTS posterior mean"
                           isAnimationActive={false}
+                          connectNulls={false}
                         />
                       )}
 
