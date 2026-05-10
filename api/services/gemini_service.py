@@ -1,13 +1,19 @@
 """
 api/services/gemini_service.py
-Dynamic Gemini context — switches per active outcome tab.
+Hardened: every failure path returns a clean response, never throws.
 """
 
-import os, json, asyncio
+import os
+import json
+import asyncio
+import logging
 from pathlib import Path
+
 import httpx
 
-GEMINI_KEY = os.getenv("GEMINI_API_KEY", "")
+log = logging.getLogger("gemini-service")
+
+GEMINI_KEY = os.getenv("GEMINI_API_KEY", "").strip()
 GEMINI_URL = (
     "https://generativelanguage.googleapis.com/v1beta/models/"
     "gemini-2.5-flash:generateContent"
@@ -42,8 +48,7 @@ RULES:
 - Cite specific numbers: weights, RMSPE values, year-by-year gaps, p-values
 - Keep answers to 3-5 sentences unless question needs more
 - Never claim stronger evidence than the data supports
-- Mention limitations when asked: short pre-period, interpolated Census data,
-  BSTS overfit caveat, own-tax-revenue attenuation for excise
+- Mention limitations when asked
 - Plain text only — no markdown"""
 
 OUTCOME_CONTEXTS = {
@@ -51,76 +56,36 @@ OUTCOME_CONTEXTS = {
 ACTIVE OUTCOME: Road Accident Deaths (MoRTH Annual Reports)
 
 KEY FINDINGS:
-- Pre-period RMSPE: 42.3 deaths (0.8% of Bihar's mean — excellent fit)
+- Pre-period RMSPE: 42.3 deaths (0.8% of Bihar's mean)
 - RMSPE ratio: 22.87x (rank 2 of 14, permutation p approximately 0.071)
 - SCM donor weights: Jharkhand 0.68, Odisha 0.16, Uttar Pradesh 0.16
-- 2016: -899 deaths (prohibition prevented ~900 deaths in year 1)
-- 2017: -261 deaths (effect persisting but weakening)
-- 2018: +1,198 deaths (reversal — Bihar now above synthetic)
-- 2019-2022: +1,061 to +3,293 deaths (Bihar increasingly above synthetic)
+- 2016: -899 deaths, 2017: -261 deaths, 2018: +1,198 deaths (reversal)
 - Average post-treatment (SCM): +360 deaths/year
 - Average post-treatment (BSTS, max_donors=3): +1,076 deaths/year
 - BSTS donors: Haryana (r=0.818), Odisha (r=0.668), West Bengal (r=0.627)
-- Interpretation: Prohibition initially reduced road fatalities but the effect
-  reversed sharply by 2018 — consistent with illicit alcohol market development
-  and cross-border smuggling eroding the ban's effectiveness
-- Literature: Chaudhuri & Jha (2024 EDCC) find similar fading pattern""",
+- Interpretation: Initial reduction reversed by 2018 — illicit market development""",
 
     "own_tax": """
 ACTIVE OUTCOME: Own Tax Revenue, Rupees Crore (RBI Handbook T168)
 
 KEY FINDINGS:
-- This is a PROXY for excise revenue — total own-tax composite, not pure excise
-- Excise was ~22-25% of Bihar's own-tax pre-prohibition
-- Bihar's excise collapsed from ~Rs 4,000 Cr (2015-16) to ~Rs 500 Cr (2017-18)
-  but this is buried in the composite
-- Pre-period RMSPE (SCM): Rs 1,091 Cr (good fit)
-- RMSPE ratio (SCM): 3.16x
+- PROXY for excise revenue — composite, not pure excise (excise was ~22-25% of own-tax pre-prohibition)
 - SCM donors: Jharkhand 83.8%, UP 16.2%
-- Average post effect (SCM): -Rs 2,017 Cr/year (Bihar below synthetic)
+- Average post effect (SCM): -Rs 2,017 Cr/year
 - Average post effect (BSTS): -Rs 4,867 Cr/year
-- BSTS donors: Jharkhand (r=0.992), West Bengal (r=0.992), Karnataka (r=0.989)
-- Interpretation: Bihar's composite own-tax is lower than counterfactual
-  but the effect is ATTENUATED — non-excise taxes (VAT to GST compensation,
-  stamps, vehicle tax) grew strongly post-2016, partially masking excise loss
-- Caveat: interpret small gap as underestimate of true fiscal impact,
-  NOT as evidence of no fiscal impact""",
+- BSTS donors: Jharkhand, West Bengal, Karnataka (all r > 0.99)
+- Caveat: small gap is UNDERESTIMATE of true fiscal impact — non-excise taxes grew strongly post-2016""",
 
     "growth": """
 ACTIVE OUTCOME: NSDP Per-Capita Growth Rate, % YoY (RBI Handbook T19)
 
 KEY FINDINGS:
-- Growth rate computed as year-on-year pct_change of NSDP per capita at
-  current prices. Series available from 2013 onwards (NSDP starts FY2012-13).
-- Bihar's pre-prohibition growth: volatile, ~6-13% nominal YoY (rapid
-  convergence from low base, standard in low-income Indian states)
-- SCM donor weights: Odisha 0.66, Rajasthan 0.32, Jharkhand 0.03
-  (different from road-accident weights — growth matching favors Odisha/Rajasthan)
-- Pre-period RMSPE: 0.07 pp (excellent fit on growth rates, n_pre=3)
-- RMSPE ratio: 83.86x (very large ratio)
-- Average post-treatment effect (SCM): -2.99 pp/year
-  (Bihar grew ~3 pp/year slower than synthetic counterfactual)
+- SCM weights: Odisha 0.66, Rajasthan 0.32, Jharkhand 0.03
+- Average post effect (SCM): -2.99 pp/year
 - Permutation p-value: ~0.43 (rank 6/14 — NOT statistically significant)
-- BSTS uses a SHIFTED treatment cutoff (2017-01-01 instead of 2016-01-01)
-  because pycausalimpact requires a 4-point pre-period span; calendar 2016
-  contained only ~8 months of prohibition, so it is folded into pre-period.
-- BSTS uses a SINGLE donor (Odisha, r=+0.98) — multi-donor BSTS overfits
-  catastrophically with only 4 pre-period points (predictions blow up to
-  -170% growth). Single-donor fit is barely identifiable.
-- BSTS average post effect (2017-2022): -4.28 pp/year
-- BSTS 95% CI: [-5.02, -3.58], p=0.0 (but tight CI reflects model constraint,
-  not true uncertainty — read as directional corroboration of SCM only)
-- Year-by-year BSTS effect: 2017 -3.87, 2018 -3.30, 2019 -1.20, 2020 +0.28
-  (COVID parity), 2021 -8.01, 2022 -9.58
-- Economic interpretation: Two competing channels —
-  POSITIVE: household income freed from alcohol, reduced absenteeism
-  NEGATIVE: excise revenue loss, hospitality/retail sector contraction,
-  cross-border leakage of consumption
-  Both methods point to negative direction (~-3 to -4 pp), consistent with
-  sector contraction outweighing positive channels
-- BUT the SCM result is not statistically significant (p=0.43) and the BSTS
-  result depends on a single-donor specification. Report as: directionally
-  consistent with growth cost, but evidence too weak to draw firm conclusions""",
+- BSTS uses 2017 cutoff and SINGLE donor (Odisha) to avoid overfit
+- BSTS effect: -4.28 pp/year, 95% CI [-5.02, -3.58]
+- Both methods directionally negative; NOT statistically significant — suggestive only""",
 }
 
 OUTCOME_FILES = {
@@ -136,94 +101,180 @@ METHOD_FILES = {
 }
 
 
+def _safe_response(answer: str, sources=None) -> dict:
+    """Always return the canonical shape so Pydantic AskResponse never fails."""
+    return {"answer": answer, "sources_used": sources or []}
+
+
 async def ask_gemini(question: str, method: str = "scm",
                      outcome: str = "road_accidents") -> dict:
+    """
+    Hardened Gemini call. Catches everything; never raises.
+    Always returns {"answer": str, "sources_used": list[str]}.
+    """
+    # ── 1. Validate API key ──────────────────────────────────────────────────
     if not GEMINI_KEY:
-        return {
-            "answer": (
-                "Gemini API key not configured. "
-                "Add GEMINI_API_KEY to api/.env to enable this feature."
-            ),
-            "sources_used": [],
-        }
+        log.warning("GEMINI_API_KEY not set in environment")
+        return _safe_response(
+            "Gemini API key not configured on the server. "
+            "The analysis results are still fully visible above. "
+            "(Admin: set GEMINI_API_KEY in Render environment variables.)"
+        )
 
-    outcome_key = outcome if outcome in OUTCOME_CONTEXTS else "road_accidents"
+    # ── 2. Load context files ────────────────────────────────────────────────
+    try:
+        outcome_key = outcome if outcome in OUTCOME_CONTEXTS else "road_accidents"
+        file_list = OUTCOME_FILES.get(outcome_key, OUTCOME_FILES["road_accidents"])
+        indices = METHOD_FILES.get(method, [0])
+        files_to_load = [file_list[i] for i in indices if i < len(file_list)]
 
-    file_list = OUTCOME_FILES.get(outcome_key, OUTCOME_FILES["road_accidents"])
-    indices = METHOD_FILES.get(method, [0])
-    files_to_load = [file_list[i] for i in indices if i < len(file_list)]
+        sources = []
+        contexts = []
+        for fname in files_to_load:
+            path = RESULTS_DIR / fname
+            if not path.exists():
+                log.warning("Results file missing: %s", path)
+                continue
+            try:
+                data = json.loads(path.read_text())
+                for key in ["placebo_gaps", "placebo_rmspe_ratios"]:
+                    if key in data:
+                        truncated = dict(list(data[key].items())[:5])
+                        data[key] = {**truncated, "...": "truncated"}
+                contexts.append(
+                    f"=== {fname.upper()} ===\n"
+                    f"{json.dumps(data, indent=2)[:5000]}"
+                )
+                sources.append(fname)
+            except Exception as e:
+                log.error("Failed to load %s: %s", fname, e)
 
-    sources = []
-    contexts = []
-    for fname in files_to_load:
-        path = RESULTS_DIR / fname
-        if path.exists():
-            data = json.loads(path.read_text())
-            for key in ["placebo_gaps", "placebo_rmspe_ratios"]:
-                if key in data:
-                    truncated = dict(list(data[key].items())[:5])
-                    data[key] = {**truncated, "...": "truncated"}
-            contexts.append(
-                f"=== {fname.upper()} ===\n"
-                f"{json.dumps(data, indent=2)[:5000]}"
-            )
-            sources.append(fname)
+        full_prompt = (
+            BASE_CONTEXT
+            + "\n\n"
+            + OUTCOME_CONTEXTS[outcome_key]
+            + "\n\nRESULTS JSON DATA:\n"
+            + "\n\n".join(contexts)
+            + f"\n\nUSER QUESTION: {question}\n\nANSWER:"
+        )
+    except Exception as e:
+        log.exception("Context-build error")
+        return _safe_response(
+            f"Internal context-building error: {type(e).__name__}."
+        )
 
-    full_prompt = (
-        BASE_CONTEXT
-        + "\n\n"
-        + OUTCOME_CONTEXTS[outcome_key]
-        + "\n\nRESULTS JSON DATA (use for precise numbers):\n"
-        + "\n\n".join(contexts)
-        + f"\n\nUSER QUESTION: {question}\n\nANSWER:"
-    )
-
+    # ── 3. Call Gemini API ───────────────────────────────────────────────────
     resp = None
-    async with httpx.AsyncClient(timeout=30.0) as client:
-        for attempt in range(3):
-            resp = await client.post(
-                f"{GEMINI_URL}?key={GEMINI_KEY}",
-                json={
-                    "contents": [{"parts": [{"text": full_prompt}]}],
-                    "generationConfig": {
-                        "temperature"    : 0.2,
-                        "maxOutputTokens": 700,
-                    },
-                },
-            )
-            if resp.status_code == 429:
-                if attempt < 2:
-                    await asyncio.sleep((2 ** attempt) * 2)
-                    continue
-                return {
-                    "answer": (
-                        "The AI assistant is temporarily busy. "
+    try:
+        async with httpx.AsyncClient(timeout=45.0) as client:
+            for attempt in range(3):
+                try:
+                    resp = await client.post(
+                        f"{GEMINI_URL}?key={GEMINI_KEY}",
+                        json={
+                            "contents": [{"parts": [{"text": full_prompt}]}],
+                            "generationConfig": {
+                                "temperature": 0.2,
+                                "maxOutputTokens": 700,
+                            },
+                        },
+                    )
+                except (httpx.TimeoutException, httpx.ConnectError) as e:
+                    log.warning("Gemini network error attempt %d: %s", attempt + 1, e)
+                    if attempt < 2:
+                        await asyncio.sleep((2 ** attempt) * 2)
+                        continue
+                    return _safe_response(
+                        "The AI assistant is temporarily unreachable. "
+                        "Please try again in a moment."
+                    )
+
+                if resp.status_code == 429:
+                    if attempt < 2:
+                        await asyncio.sleep((2 ** attempt) * 2)
+                        continue
+                    return _safe_response(
+                        "The AI assistant is busy right now. "
                         "Please try again in a few seconds."
-                    ),
-                    "sources_used": [],
-                }
-            if resp.status_code == 400:
-                return {
-                    "answer": (
-                        "Gemini returned a bad request error. "
-                        "Your question may be too long."
-                    ),
-                    "sources_used": [],
-                }
-            if resp.status_code != 200:
-                return {
-                    "answer": (
-                        f"AI assistant unavailable (HTTP {resp.status_code}). "
-                        "The analysis results are still fully available above."
-                    ),
-                    "sources_used": [],
-                }
-            break
+                    )
+
+                if resp.status_code == 400:
+                    log.error("Gemini 400: %s", resp.text[:500])
+                    return _safe_response(
+                        "Gemini rejected the request. Your question may be too long."
+                    )
+
+                if resp.status_code in (401, 403):
+                    log.error("Gemini auth %d: %s", resp.status_code, resp.text[:300])
+                    return _safe_response(
+                        f"AI assistant authentication failed (HTTP {resp.status_code}). "
+                        "The Gemini API key may be invalid."
+                    )
+
+                if resp.status_code == 404:
+                    log.error("Gemini 404 — model not found: %s", resp.text[:300])
+                    return _safe_response(
+                        "Gemini model endpoint not found (HTTP 404). "
+                        "The model name may have changed."
+                    )
+
+                if resp.status_code != 200:
+                    log.error("Gemini %d: %s", resp.status_code, resp.text[:300])
+                    return _safe_response(
+                        f"AI assistant unavailable (HTTP {resp.status_code})."
+                    )
+
+                break
+            else:
+                return _safe_response(
+                    "The AI assistant could not be reached after multiple attempts."
+                )
+    except Exception as e:
+        log.exception("Gemini transport error")
+        return _safe_response(
+            f"AI assistant transport error: {type(e).__name__}."
+        )
+
+    # ── 4. Parse response ────────────────────────────────────────────────────
+    if resp is None:
+        return _safe_response("AI assistant returned no response.")
 
     try:
-        data = resp.json() if resp is not None else {}
-        answer = data["candidates"][0]["content"]["parts"][0]["text"].strip()
-    except (KeyError, IndexError, AttributeError):
-        answer = "The AI assistant returned an unexpected response."
+        data = resp.json()
+    except Exception as e:
+        log.error("Gemini returned non-JSON: %s", e)
+        return _safe_response("AI assistant returned an invalid response format.")
 
-    return {"answer": answer, "sources_used": sources}
+    try:
+        candidates = data.get("candidates", [])
+        if not candidates:
+            block_reason = data.get("promptFeedback", {}).get("blockReason")
+            if block_reason:
+                log.warning("Gemini blocked: %s", block_reason)
+                return _safe_response(
+                    f"The AI assistant declined to answer ({block_reason}). "
+                    "Please rephrase your question."
+                )
+            log.warning("Gemini returned no candidates: %s", str(data)[:300])
+            return _safe_response(
+                "The AI assistant returned an empty response. Please try rephrasing."
+            )
+
+        parts = candidates[0].get("content", {}).get("parts", [])
+        if not parts:
+            return _safe_response(
+                "The AI assistant returned an empty answer. Please try again."
+            )
+
+        answer = parts[0].get("text", "").strip()
+        if not answer:
+            return _safe_response(
+                "The AI assistant returned no text. Please rephrase your question."
+            )
+
+        return _safe_response(answer, sources)
+    except Exception as e:
+        log.exception("Gemini response parse error")
+        return _safe_response(
+            f"Could not parse AI assistant response: {type(e).__name__}."
+        )
