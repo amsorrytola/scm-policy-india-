@@ -2,30 +2,34 @@
 # Everything else in this monorepo (raw data PDFs, notebooks, venv, papers,
 # the Python API) is irrelevant to the frontend build and would otherwise
 # bloat the upload to ~250 MB.
+#
+# IMPORTANT: every pattern below is anchored to the repo root with a leading
+# slash. Without the slash, `api/` would also match `web/app/api/` and remove
+# the Next.js Route Handler — which is exactly the bug we hit.
 
 # Python / venv
-venv/
+/venv/
 __pycache__/
 *.pyc
-.pytest_cache/
+/.pytest_cache/
 
 # Backend (deployed separately on Render)
-api/
-src/
-notebooks/
+/api/
+/src/
+/notebooks/
 
 # Raw data — PDFs and Excel files, ~220 MB
-data/
+/data/
 
 # Reference papers — ~15 MB
-papers/
+/papers/
 
 # Presentation source (PDF/PPTX is already shipped via web/public/)
-presentation/
+/presentation/
 
 # Results — only the figures inside web/public/ matter
-results/
+/results/
 
 # Misc
-scripts/
-.github/
+/scripts/
+/.github/
