@@ -11,7 +11,7 @@ import httpx
 GEMINI_KEY = os.getenv("GEMINI_API_KEY", "")
 GEMINI_URL = (
     "https://generativelanguage.googleapis.com/v1beta/models/"
-    "gemini-1.5-flash:generateContent"
+    "gemini-2.5-flash:generateContent"
 )
 
 RESULTS_DIR = Path(__file__).resolve().parents[1] / "results"
@@ -26,8 +26,8 @@ The analysis finds:
 - Top donors: Jharkhand (68%), Odisha (16%), Uttar Pradesh (16%)
 - 2016-2017: Bihar had ~600-900 FEWER deaths than synthetic counterfactual
 - 2019-2022: Bihar had ~200-1,800 MORE deaths than synthetic (fading effect)
-- Average post-treatment: +360 deaths/yr (SCM); +1355 deaths/yr (BSTS)
-- BSTS p=0.0 but unreliable — only 6 pre-treatment observations vs 13 covariates
+- Average post-treatment: +360 deaths/yr (SCM); +1076 deaths/yr (BSTS, max_donors=3)
+- BSTS p=0.0 but unreliable — only 6 pre-treatment observations; restricted to 3 covariates (Haryana, Odisha, West Bengal) to avoid overfitting
 - Own tax revenue gap: -₹2,017 Cr/yr (SCM), -₹4,867 Cr/yr (BSTS)
 
 RULES:
