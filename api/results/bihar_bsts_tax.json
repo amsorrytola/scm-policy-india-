@@ -147,7 +147,7 @@
     -19246.5772,
     -29724.8364
   ],
-  "summary_text": "Posterior Inference {Causal Impact}\n                          Average            Cumulative\nActual                    29299.71           205098.0\nPrediction (s.d.)         33546.12 (300.84)  234822.84 (2105.85)\n95% CI                    [32950.63, 34129.88][230654.39, 238909.16]\n\nAbsolute effect (s.d.)    -4246.41 (300.84)  -29724.84 (2105.85)\n95% CI                    [-4830.17, -3650.91][-33811.16, -25556.39]\n\nRelative effect (s.d.)    -12.66% (0.9%)     -12.66% (0.9%)\n95% CI                    [-14.4%, -10.88%]  [-14.4%, -10.88%]\n\nPosterior tail-area probability p: 0.0\nPosterior prob. of a causal effect: 100.0%\n\nFor more details run the command: print(impact.summary('report'))",
+  "summary_text": "Posterior Inference {Causal Impact}\n                          Average            Cumulative\nActual                    29299.71           205098.0\nPrediction (s.d.)         33546.12 (312.05)  234822.84 (2184.35)\n95% CI                    [32886.84, 34110.05][230207.9, 238770.37]\n\nAbsolute effect (s.d.)    -4246.41 (312.05)  -29724.84 (2184.35)\n95% CI                    [-4810.34, -3587.13][-33672.37, -25109.9]\n\nRelative effect (s.d.)    -12.66% (0.93%)    -12.66% (0.93%)\n95% CI                    [-14.34%, -10.69%] [-14.34%, -10.69%]\n\nPosterior tail-area probability p: 0.0\nPosterior prob. of a causal effect: 100.0%\n\nFor more details run the command: print(impact.summary('report'))",
   "p_value": 0.0,
   "pre_period_idx": [
     0,
