@@ -175,7 +175,8 @@ async def ask_gemini(question: str, method: str = "scm",
                             "contents": [{"parts": [{"text": full_prompt}]}],
                             "generationConfig": {
                                 "temperature": 0.2,
-                                "maxOutputTokens": 700,
+                                "maxOutputTokens": 1500,
+                                "thinkingConfig": {"thinkingBudget": 0},
                             },
                         },
                     )
