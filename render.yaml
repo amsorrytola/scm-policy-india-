@@ -1,0 +1,19 @@
+# Render Blueprint — auto-detected when you create a new Blueprint from this repo.
+# Docs: https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: scm-policy-india-api
+    runtime: python
+    region: singapore                # closest to India; alternatives: oregon, frankfurt
+    plan: free                       # free tier: 512MB RAM, sleeps after 15 min idle
+    branch: main
+    buildCommand: pip install -r api/requirements.txt
+    startCommand: uvicorn api.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.4"
+      - key: GEMINI_API_KEY          # set manually in Render dashboard
+        sync: false
+      - key: FRONTEND_URL            # set after Vercel deploys; e.g. https://scm-policy-india.vercel.app
+        sync: false
