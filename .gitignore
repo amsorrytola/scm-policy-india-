@@ -62,3 +62,4 @@ results/logs/*.log
 
 # OS
 .DS_Store
+.vercel

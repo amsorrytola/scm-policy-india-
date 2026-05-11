@@ -1,0 +1,31 @@
+# Vercel only needs the web/ directory to build the Next.js frontend.
+# Everything else in this monorepo (raw data PDFs, notebooks, venv, papers,
+# the Python API) is irrelevant to the frontend build and would otherwise
+# bloat the upload to ~250 MB.
+
+# Python / venv
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Backend (deployed separately on Render)
+api/
+src/
+notebooks/
+
+# Raw data — PDFs and Excel files, ~220 MB
+data/
+
+# Reference papers — ~15 MB
+papers/
+
+# Presentation source (PDF/PPTX is already shipped via web/public/)
+presentation/
+
+# Results — only the figures inside web/public/ matter
+results/
+
+# Misc
+scripts/
+.github/
