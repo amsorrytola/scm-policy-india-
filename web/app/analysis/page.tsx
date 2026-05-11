@@ -42,6 +42,7 @@ import {
   getSCMTaxResult,
   getBSTSTaxResult,
   getSCMGrowthResult,
+  getBSTSGrowthResult,
   refitSCM,
   askGemini,
 } from "@/lib/api";
@@ -176,6 +177,7 @@ export default function AnalysisPage() {
     scmGrowthResult,
     bstsResult,
     bstsTaxResult,
+    bstsGrowthResult,
     caseMetadata,
     activeOutcome,
     activeMethod,
@@ -189,6 +191,7 @@ export default function AnalysisPage() {
     setSCMGrowthResult,
     setBSTSResult,
     setBSTSTaxResult,
+    setBSTSGrowthResult,
     setCaseMetadata,
     setActiveOutcome,
     setActiveMethod,
@@ -216,8 +219,9 @@ export default function AnalysisPage() {
       getSCMTaxResult().catch(() => null),
       getBSTSTaxResult().catch(() => null),
       getSCMGrowthResult().catch(() => null),
+      getBSTSGrowthResult().catch(() => null),
     ])
-      .then(([meta, scm, bsts, scmTax, bstsTax, scmGrowth]) => {
+      .then(([meta, scm, bsts, scmTax, bstsTax, scmGrowth, bstsGrowth]) => {
         if (!mounted) return;
         setCaseMetadata(meta);
         setSCMResult(scm);
@@ -225,6 +229,7 @@ export default function AnalysisPage() {
         if (scmTax) setSCMTaxResult(scmTax);
         if (bstsTax) setBSTSTaxResult(bstsTax);
         if (scmGrowth) setSCMGrowthResult(scmGrowth);
+        if (bstsGrowth) setBSTSGrowthResult(bstsGrowth);
         setLoading(false);
       })
       .catch((err) => {
@@ -301,12 +306,11 @@ export default function AnalysisPage() {
       : activeOutcome === "growth"
       ? scmGrowthResult
       : scmResult;
-  // Growth has no BSTS counterpart — fall back to null so charts hide BSTS layers
   const currentBSTS: BSTSResult | null =
     activeOutcome === "tax"
       ? bstsTaxResult
       : activeOutcome === "growth"
-      ? null
+      ? bstsGrowthResult
       : bstsResult;
 
   // BSTS lookup by year (handles SCM 2012-2022 vs BSTS 2010-2022 mismatch)
@@ -1195,9 +1199,9 @@ export default function AnalysisPage() {
                 Method Comparison: SCM vs BSTS
               </CardTitle>
               <p className="text-sm text-gray-600">
-                Both methods agree on direction but differ in magnitude.
-                BSTS credible intervals are wide due to only 6 pre-treatment
-                observations.
+                {activeOutcome === "growth"
+                  ? "Both methods agree Bihar grew slower than counterfactual (~3-4 pp/yr). BSTS uses a single donor (Odisha) and a 2017 treatment cutoff to avoid overfitting with only 4 pre-period points."
+                  : "Both methods agree on direction but differ in magnitude. BSTS credible intervals are wide due to only 6 pre-treatment observations."}
               </p>
             </CardHeader>
             <CardContent>
@@ -1208,7 +1212,11 @@ export default function AnalysisPage() {
                   <YAxis
                     stroke="#6b7280"
                     fontSize={11}
-                    tickFormatter={fmtAxisSigned}
+                    tickFormatter={
+                      activeOutcome === "growth"
+                        ? fmtAxisSignedPct
+                        : fmtAxisSigned
+                    }
                   />
                   <Tooltip
                     contentStyle={{
@@ -1255,11 +1263,23 @@ export default function AnalysisPage() {
               </ResponsiveContainer>
 
               <div className="mt-4 rounded-lg border-l-4 border-amber bg-cream p-4 text-sm text-gray-700">
-                <strong className="text-navy">⚠️ Caveat.</strong> BSTS
-                credible intervals are artificially narrow here (±2–3 deaths)
-                because n_pre = 6 pre-treatment observations &lt;
-                n_covariates = 13 donors. The SCM permutation p-value
-                (~0.071) is the more reliable inference statistic.
+                <strong className="text-navy">⚠️ Caveat.</strong>{" "}
+                {activeOutcome === "growth" ? (
+                  <>
+                    Single-donor (Odisha) BSTS — multi-donor fits diverge to
+                    nonsense (-170% predictions) given only 4 pre-period points.
+                    Tight CI reflects model constraint, not true uncertainty.
+                    SCM permutation p ≈ 0.43 is the honest inference: not
+                    statistically significant.
+                  </>
+                ) : (
+                  <>
+                    BSTS credible intervals are artificially narrow here (±2–3
+                    deaths) because n_pre = 6 pre-treatment observations &lt;
+                    n_covariates = 13 donors. The SCM permutation p-value (~0.071)
+                    is the more reliable inference statistic.
+                  </>
+                )}
               </div>
             </CardContent>
           </Card>
