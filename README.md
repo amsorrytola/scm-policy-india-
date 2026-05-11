@@ -78,7 +78,7 @@ cd web && npm install && npm run dev
 
 ## Author
 
-[YOUR NAME] — [YOUR EMAIL] — Department of Economics, IIT Roorkee
+Mohammed Talha Ansari — mohammed_ta@hs.iitr.ac.in — Department of Economics, IIT Roorkee
 
 ## License
 

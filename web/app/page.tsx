@@ -237,7 +237,7 @@ export default function HomePage() {
       {/* FOOTER */}
       <footer className="border-t border-gray-200 bg-white py-10 text-center text-sm text-gray-600">
         <p>
-          [YOUR NAME] · Supervisor: Prof. Abhishek Samantray, IIT Roorkee
+          Mohammed Talha Ansari · Supervisor: Prof. Abhishek Samantray, IIT Roorkee
         </p>
         <p className="mt-2">
           <a
