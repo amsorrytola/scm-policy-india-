@@ -87,41 +87,45 @@
   \hspace*{6pt}\vspace*{4pt}%
 }
 
-% ── tcolorbox styles (tighter padding to save vertical space) ───────────────
+% ── tcolorbox styles ────────────────────────────────────────────────────────
+% Titled boxes use an inline title band (top of the box) instead of the
+% floated `attach boxed title to top left` style, which silently clipped at
+% tight top-padding values and dropped titles in the rendered PDF.
 \tcbset{
   navybox/.style={
-    colback=NavyPrimary!10, colframe=NavyPrimary,
-    boxrule=0.8pt, arc=3pt, left=4pt, right=4pt, top=2pt, bottom=2pt,
-    fonttitle=\footnotesize\bfseries\color{white}, coltitle=white,
-    attach boxed title to top left={yshift=-1.6mm,xshift=4mm},
-    boxed title style={colback=NavyPrimary,arc=2pt,boxrule=0pt}
+    enhanced, colback=NavyPrimary!8, colframe=NavyPrimary,
+    boxrule=0.6pt, arc=3pt, left=5pt, right=5pt, top=3pt, bottom=3pt,
+    fonttitle=\footnotesize\bfseries, coltitle=white,
+    colbacktitle=NavyPrimary,
+    toptitle=1pt, bottomtitle=1pt,
+    titlerule=0pt
   },
   amberbox/.style={
-    colback=AmberAccent!15, colframe=AmberDark,
-    boxrule=0.8pt, arc=3pt, left=4pt, right=4pt, top=2pt, bottom=2pt
+    enhanced, colback=AmberAccent!15, colframe=AmberDark,
+    boxrule=0.6pt, arc=3pt, left=5pt, right=5pt, top=3pt, bottom=3pt
   },
   greenbox/.style={
-    colback=SuccessGreen!12, colframe=SuccessGreen!70,
-    boxrule=0.8pt, arc=3pt, left=4pt, right=4pt, top=2pt, bottom=2pt,
-    fonttitle=\footnotesize\bfseries\color{white}, coltitle=white,
-    attach boxed title to top left={yshift=-1.6mm,xshift=4mm},
-    boxed title style={colback=SuccessGreen!70,arc=2pt,boxrule=0pt}
+    enhanced, colback=SuccessGreen!10, colframe=SuccessGreen!65,
+    boxrule=0.6pt, arc=3pt, left=5pt, right=5pt, top=3pt, bottom=3pt,
+    fonttitle=\footnotesize\bfseries, coltitle=white,
+    colbacktitle=SuccessGreen!65,
+    toptitle=1pt, bottomtitle=1pt, titlerule=0pt
   },
   redbox/.style={
-    colback=DangerRed!10, colframe=DangerRed!60,
-    boxrule=0.8pt, arc=3pt, left=4pt, right=4pt, top=2pt, bottom=2pt,
-    fonttitle=\footnotesize\bfseries\color{white}, coltitle=white,
-    attach boxed title to top left={yshift=-1.6mm,xshift=4mm},
-    boxed title style={colback=DangerRed!60,arc=2pt,boxrule=0pt}
+    enhanced, colback=DangerRed!8, colframe=DangerRed!55,
+    boxrule=0.6pt, arc=3pt, left=5pt, right=5pt, top=3pt, bottom=3pt,
+    fonttitle=\footnotesize\bfseries, coltitle=white,
+    colbacktitle=DangerRed!55,
+    toptitle=1pt, bottomtitle=1pt, titlerule=0pt
   },
   statbox/.style={
-    colback=NavyPrimary, colframe=NavyDark,
-    boxrule=0pt, arc=4pt, left=4pt, right=4pt, top=3pt, bottom=3pt,
+    enhanced, colback=NavyPrimary, colframe=NavyDark,
+    boxrule=0pt, arc=4pt, left=4pt, right=4pt, top=4pt, bottom=4pt,
     halign=center, fontupper=\color{white}
   },
   graybox/.style={
-    colback=GrayLight!40, colframe=GrayMid,
-    boxrule=0.5pt, arc=3pt, left=3pt, right=3pt, top=2pt, bottom=2pt
+    enhanced, colback=GrayLight!40, colframe=GrayMid,
+    boxrule=0.5pt, arc=3pt, left=4pt, right=4pt, top=3pt, bottom=3pt
   }
 }
 
@@ -985,17 +989,17 @@
   \toptight
   \vspace{0.15cm}
   \begin{tcolorbox}[navybox,title={\faBookOpen\enspace Methodology}]
-    \scriptsize\setlength\itemsep{1pt}
+    \scriptsize\setlength\itemsep{0pt}
     \begin{itemize}
-      \item Abadie, A., Diamond, A., \& Hainmueller, J.\ (2010). Synthetic
-            Control Methods for Comparative Case Studies. \emph{JASA}, 105(490), 493--505.
-      \item Abadie, A., Diamond, A., \& Hainmueller, J.\ (2015). Comparative
-            Politics and the Synthetic Control Method. \emph{AJPS}, 59(2), 495--510.
-      \item Abadie, A.\ (2021). Using Synthetic Controls. \emph{JEL}, 59(2), 391--425.
-      \item Brodersen, K.\ et al.\ (2015). Inferring Causal Impact Using
-            Bayesian Structural Time-Series Models. \emph{AOAS}, 9(1), 247--274.
-      \item Doudchenko, N., \& Imbens, G.\ (2016). Balancing, Regression, DiD
-            and Synthetic Control. \emph{NBER WP} 22791.
+      \item Abadie, Diamond \& Hainmueller (2010). Synthetic Control Methods.
+            \emph{JASA}, 105(490), 493--505.
+      \item Abadie, Diamond \& Hainmueller (2015). Comparative Politics and
+            the SCM. \emph{AJPS}, 59(2), 495--510.
+      \item Abadie (2021). Using Synthetic Controls. \emph{JEL}, 59(2), 391--425.
+      \item Brodersen et al.\ (2015). Inferring Causal Impact Using BSTS.
+            \emph{AOAS}, 9(1), 247--274.
+      \item Doudchenko \& Imbens (2016). Balancing, Regression, DiD and SCM.
+            \emph{NBER WP} 22791.
     \end{itemize}
   \end{tcolorbox}
 
