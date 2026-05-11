@@ -35,12 +35,14 @@ app = FastAPI(
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
-# CORS — allow the local frontend dev server (and an optional prod origin via env)
+# CORS — local dev + the canonical prod origin (FRONTEND_URL env var) +
+# any Vercel preview deploy of this project (regex match) so previews "just work".
 frontend = os.getenv("FRONTEND_URL", "http://localhost:3000")
 allowed_origins = [frontend, "http://localhost:3000", "http://127.0.0.1:3000"]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=list(dict.fromkeys(allowed_origins)),  # dedupe, keep order
+    allow_origin_regex=r"https://scm-policy-india.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],
