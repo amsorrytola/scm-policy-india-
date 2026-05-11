@@ -13,6 +13,7 @@ class RefitRequest(BaseModel):
 class AskRequest(BaseModel):
     question: str = Field(..., min_length=3, max_length=500)
     method: Optional[str] = "scm"  # "scm" | "bsts" | "both"
+    outcome: Optional[str] = "road_accidents"  # "road_accidents" | "own_tax" | "growth"
 
 
 class AskResponse(BaseModel):

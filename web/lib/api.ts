@@ -23,6 +23,9 @@ export const getBSTSTaxResult = () =>
 export const getSCMGrowthResult = () =>
   api.get("/api/case/bihar/scm/growth").then((r) => r.data);
 
+export const getBSTSGrowthResult = () =>
+  api.get("/api/case/bihar/bsts/growth").then((r) => r.data);
+
 export default api;
 
 export const getPanelData = () =>
@@ -43,6 +46,7 @@ export const refitSCM = (
 
 export const askGemini = (
   question: string,
-  method: "scm" | "bsts" | "both" = "scm"
+  method: "scm" | "bsts" | "both" = "scm",
+  outcome: "road_accidents" | "own_tax" | "growth" = "road_accidents"
 ) =>
-  api.post("/api/ask", { question, method }).then((r) => r.data);
+  api.post("/api/ask", { question, method, outcome }).then((r) => r.data);

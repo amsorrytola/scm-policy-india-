@@ -75,11 +75,12 @@ def get_precomputed(result_type: str = "scm") -> dict:
     result_type: "scm" | "bsts" | "scm_tax" | "bsts_tax"
     """
     fname_map = {
-        "scm"        : "bihar_scm.json",
-        "bsts"       : "bihar_bsts.json",
-        "scm_tax"    : "bihar_scm_tax.json",
-        "bsts_tax"   : "bihar_bsts_tax.json",
-        "scm_growth" : "bihar_scm_growth.json",
+        "scm"         : "bihar_scm.json",
+        "bsts"        : "bihar_bsts.json",
+        "scm_tax"     : "bihar_scm_tax.json",
+        "bsts_tax"    : "bihar_bsts_tax.json",
+        "scm_growth"  : "bihar_scm_growth.json",
+        "bsts_growth" : "bihar_bsts_growth.json",
     }
     if result_type not in fname_map:
         raise ValueError(f"Unknown result_type: {result_type}. "

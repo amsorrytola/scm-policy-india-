@@ -471,7 +471,13 @@ export default function AnalysisPage() {
     setChatInput("");
     setChatLoading(true);
     try {
-      const resp = await askGemini(question, chatMethod);
+      const outcomeKey =
+        activeOutcome === "tax"
+          ? "own_tax"
+          : activeOutcome === "growth"
+          ? "growth"
+          : "road_accidents";
+      const resp = await askGemini(question, chatMethod, outcomeKey);
       addMessage({
         role: "assistant",
         content: resp.answer,
@@ -1273,11 +1279,27 @@ export default function AnalysisPage() {
             </CardHeader>
             <CardContent>
               <div className="mb-3 flex flex-wrap gap-2">
-                {[
-                  "Why does Jharkhand get 68% weight?",
-                  "How reliable is the p-value?",
-                  "What happened in 2018 when the effect reversed?",
-                ].map((q) => (
+                {(activeOutcome === "tax"
+                  ? [
+                      "Why is the tax revenue effect attenuated?",
+                      "What was Bihar's actual excise revenue loss?",
+                      "Why do Jharkhand and UP dominate the weights here?",
+                      "How does GST compensation affect this estimate?",
+                    ]
+                  : activeOutcome === "growth"
+                  ? [
+                      "Why is the growth effect not statistically significant?",
+                      "What are the two competing economic channels?",
+                      "Why do Odisha and Rajasthan dominate the growth SCM weights?",
+                      "How does the RMSPE ratio of 83x relate to the p-value of 0.43?",
+                    ]
+                  : [
+                      "Why does Jharkhand get 68% weight?",
+                      "What happened in 2018 when the effect reversed?",
+                      "How reliable is the permutation p-value of 0.071?",
+                      "What does the RMSPE ratio of 22.87x mean?",
+                    ]
+                ).map((q) => (
                   <button
                     key={q}
                     onClick={() => handleAsk(q)}

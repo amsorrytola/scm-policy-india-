@@ -56,6 +56,14 @@ def get_scm_growth():
         raise HTTPException(status_code=404, detail=str(e))
 
 
+@router.get("/case/bihar/bsts/growth")
+def get_bsts_growth():
+    try:
+        return scm_service.get_precomputed("bsts_growth")
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+
 @router.get("/case/bihar/data")
 def get_panel_data():
     import json
@@ -87,5 +95,6 @@ async def ask(request: Request, body: AskRequest):
     result = await gemini_service.ask_gemini(
         question = body.question,
         method   = body.method or "scm",
+        outcome  = body.outcome or "road_accidents",
     )
     return result
