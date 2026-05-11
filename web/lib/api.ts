@@ -46,9 +46,29 @@ export const refitSCM = (
     })
     .then((r) => r.data);
 
-export const askGemini = (
+// Ask the model.
+//
+// This hits the LOCAL Next.js Route Handler (web/app/api/ask/route.ts) — NOT
+// the FastAPI backend. The Gemini key lives in Vercel env (server-side only),
+// so the browser never sees it and there's no cross-origin hop.
+export const askGemini = async (
   question: string,
   method: "scm" | "bsts" | "both" = "scm",
   outcome: "road_accidents" | "own_tax" | "growth" = "road_accidents"
-) =>
-  api.post("/api/ask", { question, method, outcome }).then((r) => r.data);
+): Promise<{ answer: string; sources_used: string[] }> => {
+  try {
+    const r = await fetch("/api/ask", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question, method, outcome }),
+    });
+    return await r.json();
+  } catch (e) {
+    return {
+      answer: `The AI assistant is unreachable (${
+        e instanceof Error ? e.message : "unknown error"
+      }).`,
+      sources_used: [],
+    };
+  }
+};
