@@ -199,30 +199,17 @@ async def ask_gemini(question: str, method: str = "scm",
                         "Please try again in a few seconds."
                     )
 
-                if resp.status_code == 400:
-                    log.error("Gemini 400: %s", resp.text[:500])
-                    return _safe_response(
-                        "Gemini rejected the request. Your question may be too long."
-                    )
-
-                if resp.status_code in (401, 403):
-                    log.error("Gemini auth %d: %s", resp.status_code, resp.text[:300])
-                    return _safe_response(
-                        f"AI assistant authentication failed (HTTP {resp.status_code}). "
-                        "The Gemini API key may be invalid."
-                    )
-
-                if resp.status_code == 404:
-                    log.error("Gemini 404 — model not found: %s", resp.text[:300])
-                    return _safe_response(
-                        "Gemini model endpoint not found (HTTP 404). "
-                        "The model name may have changed."
-                    )
-
                 if resp.status_code != 200:
-                    log.error("Gemini %d: %s", resp.status_code, resp.text[:300])
+                    body = resp.text[:400] if resp.text else "(empty)"
+                    # Defensively strip the API key if Gemini ever echoes it
+                    if GEMINI_KEY and GEMINI_KEY in body:
+                        body = body.replace(GEMINI_KEY, "[REDACTED]")
+                    log.error("Gemini %d: %s", resp.status_code, body)
+                    if resp.status_code == 429 and attempt < 2:
+                        await asyncio.sleep((2 ** attempt) * 2)
+                        continue
                     return _safe_response(
-                        f"AI assistant unavailable (HTTP {resp.status_code})."
+                        f"Gemini HTTP {resp.status_code}: {body}"
                     )
 
                 break
