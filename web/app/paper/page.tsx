@@ -21,7 +21,7 @@ export default function PaperPage() {
         <h1 className="font-serif text-3xl font-bold text-navy">
           Presentation
         </h1>
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3">
           <a
             href="/slides.pdf"
             download
@@ -31,10 +31,18 @@ export default function PaperPage() {
             Download PDF
           </a>
           <a
+            href="/slides.pptx"
+            download
+            className="inline-flex items-center gap-2 rounded-lg border border-navy bg-white px-4 py-2 text-sm font-semibold text-navy hover:bg-navy hover:text-white"
+          >
+            <Download className="h-4 w-4" />
+            Download PPTX
+          </a>
+          <a
             href={ghUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-lg border border-navy px-4 py-2 text-sm font-semibold text-navy hover:bg-navy hover:text-white"
+            className="inline-flex items-center gap-2 rounded-lg border border-navy bg-white px-4 py-2 text-sm font-semibold text-navy hover:bg-navy hover:text-white"
           >
             <GitBranch className="h-4 w-4" />
             Source on GitHub
