@@ -13,7 +13,8 @@ export default function PaperPage() {
   }, []);
 
   const ghUrl =
-    process.env.NEXT_PUBLIC_GITHUB_URL ?? "https://github.com";
+    process.env.NEXT_PUBLIC_GITHUB_URL ??
+    "https://github.com/amsorrytola/scm-policy-india-";
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-10">

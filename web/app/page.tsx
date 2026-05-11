@@ -243,7 +243,7 @@ export default function HomePage() {
           <a
             href={
               process.env.NEXT_PUBLIC_GITHUB_URL ??
-              "https://github.com"
+              "https://github.com/amsorrytola/scm-policy-india-"
             }
             target="_blank"
             rel="noopener noreferrer"

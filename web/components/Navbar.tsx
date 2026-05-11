@@ -14,7 +14,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const ghUrl =
     process.env.NEXT_PUBLIC_GITHUB_URL ??
-    "https://github.com";
+    "https://github.com/amsorrytola/scm-policy-india-";
 
   return (
     <header className="sticky top-0 z-40 border-b border-gray-200 bg-cream/85 backdrop-blur-md">
