@@ -2,7 +2,9 @@ import axios from "axios";
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000",
-  timeout: 30000,
+  // 60s timeout to absorb Render free-tier cold starts (~30–40s on first hit
+  // after idle). Subsequent requests are sub-second.
+  timeout: 60000,
 });
 
 export const getCaseMetadata = () =>
